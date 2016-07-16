@@ -1,0 +1,30 @@
+{
+  "music": "WhatCD",
+  "movie": "PassThePopcorn",
+  "tvshow": "BroadcasTheNet",
+
+  "WhatCD": {
+    "username": "dotconnor",
+    "password": "rThj7890!",
+    "auth_key": "11241d6214bff87f2136ee8a5a00fd30",
+    "torrent_pass": "3yry8mewqyqb2vvjk77y6hys3jd9hu4w",
+    "formats": ["FLAC"],
+    "sources": ["WEB", "CD"]
+  },
+
+  "PassThePopcorn": {
+    "username": "dotconnor",
+    "password": "rThj7890!",
+    "auth": "zsyuou717n0zrx1gu11nazv6vr46js8c",
+    "resolutions": ["1080p", "720p"],
+    "sources": ["WEB-DL", "DVD", "WEB", "Blu-Ray"]
+  },
+
+  "BroadcasTheNet": {
+    "username": "dotconnor",
+    "password": "rThj7890!",
+    "resolutions": ["1080p", "720p"],
+    "sources": ["WEB", "Bluray"],
+    "key": "35348e9ad7f0f66b32cc1c799271d110"
+  }
+}
