@@ -19,8 +19,11 @@ var filter = {
   "tvshows": filterTVShows
 }
 
+var callback;
+
 stdin.addListener("data", str => {
   var args;
+  var searchText;
   str = str.toString().trim(); 
    
   if (!str.length) {
@@ -29,19 +32,12 @@ stdin.addListener("data", str => {
   }
 
   args = str.split(' ');
-  
-  if (!args[1] || !directory[args[1]]) {
-    console.log('Invalid media type');
-    return;
-  }
-
-  var searchText = args.slice(2).join(' ');
-  console.log('SEARCH:', searchText);
+  searchText = args.slice(2).join(' ');
 
   switch (args[0]) {
     case "search":
       directory[args[1]].search(searchText).then( data => {
-        question(filter[args[1]](data));         
+        callback = question(filter[args[1]](data));         
       });
 
       break;
@@ -52,7 +48,7 @@ stdin.addListener("data", str => {
       directory[args[1]].search(searchText);
       break;
     default:
-      console.log("Invalid action entered");
+      callback = callback(args);
       break;
   }
 });
@@ -90,5 +86,21 @@ function filterMovies (data) {
 }
 
 function question (data) {
-  console.log(data);
+  if (!Array.isArray(data)) {
+    var counter = 1;
+    for (var category in data) {
+      console.log(counter + '. ' + category);
+      ++counter;
+    }
+
+    return (args) => { return question(data[Object.keys(data)[parseInt(args[0]) - 1]]); };
+  } else {
+    var counter = 1;
+    data.forEach(torrent => {
+      console.log(counter + '. ' + torrent.ReleaseName);
+      ++counter;
+    });
+
+    return (args) => { console.log(data[parseInt(args[0]) - 1]);  };
+  }
 }
