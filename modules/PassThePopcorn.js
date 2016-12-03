@@ -1,27 +1,35 @@
 var https       = require('https');
 var http        = require('http');
 var request     = require('request');
-request     = request.defaults({jar: true});
+    request     = request.defaults({jar: true});
 var exec        = require('child_process').exec;
 var deferred    = require('deferred');
 var config      = require('../config.json');
 
 // Login to the PassThePopcorn API using the username and password supplied in the config file
-var host = config[config.movies];
-request.post({  url: 'https://tls.passthepopcorn.me/ajax.php?action=login',
-                form: { username: host.username,
-                        password: host.password,
-                        passkey: host.auth,
-                        keeplogged: 1
-            }},
-function(err, httpResponse, body) {
-  if (err)
-    console.log(err);
+function login() {
+  var host = config[config.movies];
+  var promise = deferred();
 
-  console.log('BODY:', body);
-  console.log('logged in to PTP');
+  request.post({  
+    url: 'https://tls.passthepopcorn.me/ajax.php?action=login',
+      form: { 
+        username: host.username,
+        password: host.password,
+        passkey: host.auth,
+        keeplogged: 1
+      }
+  }, (err, httpResponse, body) => {
+    if (err) {
+      console.log(err);
+      promise.reject();
+    }
+
+    promise.resolve();
+  });
+
+  return promise.promise;
 }
-);
 /* This is where the download-related
 functions are. Search functions
 are below this sectioin          */
@@ -52,15 +60,15 @@ bottom of the file.             */
 
 // Exported function that is called as the search endpoint for the PassThePopcorn module
 function searchForMovie(title) {
-  var response    = deferred();
+  var promise = deferred();
 
-  request('https://passthepopcorn.me/torrents.php?searchstr=' + encodeURI(title) + '&json=noredirect', function (error, res, body) {
-    console.log(JSON.stringify(JSON.parse(body), null, 3));
-
-    response.resolve(process(JSON.parse(body)));
+  login().then( () =>{
+    request('https://tls.passthepopcorn.me/torrents.php?searchstr=' + encodeURI(title) + '&json=noredirect', function (error, res, body) {
+      promise.resolve(process(JSON.parse(body)));
+    });
   });
 
-  return response.promise;
+  return promise.promise;
 }
 
 // Convert the returned JSON into a usable, organized structure
@@ -75,8 +83,8 @@ function process(json) {
     };
 
     movie.Torrents.forEach(function (torrent) {
-      if (config[config.movie].resolutions.indexOf(torrent.Resolution) != -1 &&
-      config[config.movie].sources.indexOf(torrent.Source) != -1)
+      if (config[config.movies].resolutions.indexOf(torrent.Resolution) != -1 &&
+      config[config.movies].sources.indexOf(torrent.Source) != -1)
         newmovie.torrents.push(torrent);
     });
 
@@ -87,5 +95,6 @@ function process(json) {
   return movies;
 }
 
+exports.login       = login;
 exports.search      = searchForMovie;
 exports.download    = downloadMovie;
