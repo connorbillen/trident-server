@@ -11,6 +11,12 @@ var directory = {
   "music": music,
   "movies": movies,
   "tvshows": tvshows
+};
+
+var filter = {
+  "music": filterMusic,
+  "movies": filterMovies,
+  "tvshows": filterTVShows
 }
 
 stdin.addListener("data", str => {
@@ -34,7 +40,10 @@ stdin.addListener("data", str => {
 
   switch (args[0]) {
     case "search":
-      directory[args[1]].search(searchText).then(console.log);
+      directory[args[1]].search(searchText).then( data => {
+        question(filter[args[1]](data));         
+      });
+
       break;
     case "add":
       directory[args[1]].search(searchText);
@@ -47,3 +56,39 @@ stdin.addListener("data", str => {
       break;
   }
 });
+
+function filterMusic (data) {
+  var parsed = {};
+
+  data.forEach( album => {
+    if (!parsed[album.artist]) {
+      parsed[album.artist] = {};
+    }
+
+    parsed[album.artist][album.name] = album.torrents;
+  });
+
+  return parsed;
+}
+
+function filterTVShows (data) {
+  return data;
+}
+
+function filterMovies (data) {
+  var parsed = {};
+
+  data.forEach( movie => {
+    if (!parsed[movie.title]) {
+      parsed[movie.title] = {};
+    }
+
+    parsed[movie.title] = movie.torrents;
+  });
+
+  return parsed;
+}
+
+function question (data) {
+  console.log(data);
+}
