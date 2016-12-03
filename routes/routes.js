@@ -1,8 +1,8 @@
 'use strict';
-var config = require('../config.json');
-var music = require('../modules/' + config.music);
-var movie = require('../modules/' + config.movie);
-var tvshow = require('../modules/' + config.tvshow);
+var config  = require('../config.json');
+var music   = require('../modules/' + config.music);
+var movies  = require('../modules/' + config.movies);
+var tvshows = require('../modules/' + config.tvshows);
 
 var appRouter = function(app) {
   app.post('/search', function(req, res) {

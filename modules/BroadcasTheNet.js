@@ -38,8 +38,8 @@ function searchForTVShow(title, count) {
 
   var formData = JSON.stringify({
     'method': 'getTorrents',
-    'params': [ config[config.tvshow].key,
-              [ { 'series': '%' + title + '%', 'category': 'Season', 'resolution': config[config.tvshow].resolutions, 'source': config[config.tvshow].sources }],
+    'params': [ config[config.tvshows].key,
+              [ { 'series': '%' + title + '%', 'category': 'Season', 'resolution': config[config.tvshows].resolutions, 'source': config[config.tvshows].sources }],
                    count, 0],
     'id': 'query'
   });
@@ -49,8 +49,6 @@ function searchForTVShow(title, count) {
                   headers: { 'Content-Type': 'application/json' },
                   body: formData },
                   function (err, httpResponse, body) {
-                    console.log(body);
-
                     if (err)
                       console.log(err);
                     var obj = JSON.parse(body);

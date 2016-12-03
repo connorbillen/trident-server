@@ -1,17 +1,20 @@
-var https = require('https');
-var http = require('http');
-var request = require('request');
-    request = request.defaults({jar: true});
-var exec = require('child_process').exec;
-var deferred = require('deferred');
-var config = require('../config.json');
+var https     = require('https');
+var http      = require('http');
+var request   = require('request');
+    request   = request.defaults({jar: true});
+var exec      = require('child_process').exec;
+var deferred  = require('deferred');
+var config    = require('../config.json');
 
-// Login to the WhatCD API using the username and password supplied in the config file
+// Login to the Apollo API using the username and password supplied in the config file
 var host = config[config.music];
-request.post({ url: 'https://what.cd/login.php', form: { username: host.username, password: host.password }}, 
+request.post({ url: 'https://apollo.rip/login.php', form: { username: host.username, password: host.password }}, 
   function(err, httpResponse, body) { 
-    if (err)
+    if (err) {
       console.log(err);
+    }
+
+    console.log('logged in to Apollo');
   }
 );
 /* This is where the download-related 
@@ -46,7 +49,7 @@ function downloadAlbum(options) {
 function searchForArtist(artist) {
   var response    = deferred();
    
-  request('https://what.cd/ajax.php?action=artist&artistname=' + encodeURI(artist), function (error, res, body) {
+  request('https://apollo.rip/ajax.php?action=artist&artistname=' + encodeURI(artist), function (error, res, body) {
     if (JSON.parse(body).status == 'failure')
       response.resolve('<p>Search failed: ' + body + '</p>');
     else

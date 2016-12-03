@@ -2,7 +2,7 @@
   "name": "trident-server",
   "version": "1.0.0",
   "description": "A content management system for media servers that utilizes popular torrent and UseNet trackers",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
