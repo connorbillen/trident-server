@@ -96,11 +96,13 @@ function filterMovies (data) {
     if (!parsed[movie.title]) {
       parsed[movie.title] = {};
     }
+    
+    movie.torrents.forEach(torrent => {
+      torrent.Name = torrent.Resolution + ' - ' + torrent.Codec + ' - ' + torrent.Container;
+    });
 
     parsed[movie.title] = movie.torrents;
   });
-
-  console.log('', parsed);
 
   return parsed;
 }

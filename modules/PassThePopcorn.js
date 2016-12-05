@@ -12,7 +12,7 @@ function login() {
   var promise = deferred();
 
   request.post({  
-    url: 'https://tls.passthepopcorn.me/ajax.php?action=login',
+    url: 'https://passthepopcorn.me/ajax.php?action=login',
       form: { 
         username: host.username,
         password: host.password,
@@ -36,21 +36,21 @@ are below this sectioin          */
 
 // Exported function that is called as the download endpoint for the PassThePopcorn module
 function downloadMovie(options) {
-  var response = deferred();
+  var promise = deferred();
 
-  exec('curl -o "' + config[config.movies].watch_dir + options.title + '.torrent" "' + options.url + '"',
-  function processDownload(error, stdout, stderr) {
-    if (error) {
-      console.log(stderr);
-      return;
+  exec('curl -o "' + config[config.movies].watch_dir + options.title + '.torrent" ' +  
+       '"https://passthepopcorn.me/torrents.php?action=download&id=' + options.Id + '&authkey=' + config[config.movies].authkey + '&torrent_pass=' + config[config.movies].auth + '"',
+    function processDownload(error, stdout, stderr) {
+      if (error) {
+        console.log(stderr);
+        return;
+      }
+
+      promise.resolve(stdout);
     }
+  );
 
-    console.log(stdout);
-    response.resolve();
-  }
-);
-
-return response.promise;
+  return promise.promise;
 }
 
 
@@ -62,7 +62,7 @@ bottom of the file.             */
 function searchForMovie(title) {
   var promise = deferred();
 
-  login().then( () =>{
+  login().then( () => {
     request('https://tls.passthepopcorn.me/torrents.php?searchstr=' + encodeURI(title) + '&json=noredirect', function (error, res, body) {
       promise.resolve(process(JSON.parse(body)));
     });
