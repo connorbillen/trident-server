@@ -10,6 +10,9 @@ var app = express();
     app.use(cors());
 var routes = require('./routes/routes.js')(app);
 
+// Instantiate backend manager
+var manager = require('./manager');
+
 // Instantiate the CLI interface
 var cli = require('./cli');
 
