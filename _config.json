@@ -1,0 +1,33 @@
+{ 
+  "music": "Apollo",
+  "movies": "PassThePopcorn",
+  "tvshows": "BroadcasTheNet",
+  "Apollo": {
+    "username": "",
+    "password": "",
+    "authkey": "",
+    "torrent_pass": "",
+    "formats": ["FLAC", "MP3"],
+    "sources": ["WEB", "CD"],
+    "watch_dir": ""
+  },
+  "BroadcasTheNet": {
+    "username": "",
+    "password": "",
+    "key": "",
+    "authkey": "",
+    "torrent_pass": "",
+    "resolutions": ["720p", "1080p"],
+    "sources": ["WEB", "Bluray"],
+    "watch_dir": ""
+  },
+  "PassThePopcorn": {
+    "username": "",
+    "password": "",
+    "authkey": "",
+    "auth": "",
+    "resolutions": ["1080p", "720p"],
+    "sources": ["Blu-ray", "WEB", "WEB-DL"],
+    "watch_dir": ""
+  }
+}
