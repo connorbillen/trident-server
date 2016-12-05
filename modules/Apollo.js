@@ -6,8 +6,10 @@ var exec      = require('child_process').exec;
 var deferred  = require('deferred');
 var config    = require('../config.json');
 
+
 // Login to the Apollo API using the username and password supplied in the config file
 var host = config[config.music];
+
 request.post({ url: 'https://apollo.rip/login.php', form: { username: host.username, password: host.password }}, 
   function(err, httpResponse, body) { 
     if (err) {
@@ -23,21 +25,21 @@ request.post({ url: 'https://apollo.rip/login.php', form: { username: host.usern
 
 // Exported function that is called as the download endpoint for the BroadcasTheNet module
 function downloadAlbum(options) {
-  var response = deferred();
+  var promise = deferred();
 
-  exec('curl -O "' + config[config.music].watch_dir + options.title + '.torrent" "' + options.url + '"', 
-    function processDownload(error, stdout, stderr) {
+  exec('curl -o "' + host.watch_dir + options.title +
+       '.torrent" ' + '"https://apollo.rip/torrents.php?action=download&id=' + options.id + '&authkey=' + host.authkey +  '&torrent_pass=' + host.torrent_pass + '"', 
+    (error, stdout, stderr) => {
       if (error) {
         console.log(stderr);
         return;
       }
 
-      console.log(stdout);
-      response.resolve();
+      promise.resolve(stdout);
     }
   );
 
-  return response.promise;
+  return promise.promise;
 }
 
 

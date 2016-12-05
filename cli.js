@@ -7,6 +7,8 @@ var music   = require('./modules/' + config.music);
 var movies  = require('./modules/' + config.movies);
 var tvshows = require('./modules/' + config.tvshows);
 
+var activeSelection = '';
+
 var directory = {
   "music": music,
   "movies": movies,
@@ -36,19 +38,15 @@ stdin.addListener("data", str => {
 
   switch (args[0]) {
     case "search":
+      activeSelection = args[1];
+
       directory[args[1]].search(searchText).then( data => {
         callback = question(filter[args[1]](data));         
       });
 
       break;
-    case "add":
-      directory[args[1]].search(searchText);
-      break;
-    case "remove":
-      directory[args[1]].search(searchText);
-      break;
     default:
-      callback = callback(args);
+      callback = (callback ? callback(args) : null);
       break;
   }
 });
@@ -61,6 +59,10 @@ function filterMusic (data) {
       parsed[album.artist] = {};
     }
 
+    album.torrents.forEach( torrent => {
+      torrent.Name = torrent.media + ' - ' + torrent.format + ' - ' + torrent.encoding;
+    });
+
     parsed[album.artist][album.name] = album.torrents;
   });
 
@@ -68,6 +70,22 @@ function filterMusic (data) {
 }
 
 function filterTVShows (data) {
+  for (var show in data) {
+    for (var season in data[show]) {
+      if (typeof data[show][season] === 'string') {
+        continue;
+      }
+
+      for (var resolution in data[show][season]) {
+        if (Array.isArray(data[show][season][resolution])) {
+          data[show][season][resolution].forEach( torrent => {
+            torrent.Name = resolution + ' - ' + torrent.container + ' - ' + torrent.source;
+          });
+        }
+      }
+    }
+  }
+
   return data;
 }
 
@@ -81,6 +99,8 @@ function filterMovies (data) {
 
     parsed[movie.title] = movie.torrents;
   });
+
+  console.log('', parsed);
 
   return parsed;
 }
@@ -97,10 +117,10 @@ function question (data) {
   } else {
     var counter = 1;
     data.forEach(torrent => {
-      console.log(counter + '. ' + torrent.ReleaseName);
+      console.log(counter + '. ' + torrent.Name);
       ++counter;
     });
 
-    return (args) => { console.log(data[parseInt(args[0]) - 1]);  };
+    return (args) => { directory[activeSelection].download(data[parseInt(args[0]) - 1]).then(() => console.log('Download complete')); };
   }
 }
