@@ -38,7 +38,7 @@ are below this sectioin          */
 function downloadMovie(options) {
   var promise = deferred();
 
-  exec('curl -o "' + config[config.movies].watch_dir + options.title + '.torrent" ' +  
+  exec('curl -o "' + config[config.movies].watch_dir + options.Name + '.torrent" ' +  
        '"https://passthepopcorn.me/torrents.php?action=download&id=' + options.Id + '&authkey=' + config[config.movies].authkey + '&torrent_pass=' + config[config.movies].auth + '"',
     function processDownload(error, stdout, stderr) {
       if (error) {

@@ -27,7 +27,7 @@ request.post({ url: 'https://apollo.rip/login.php', form: { username: host.usern
 function downloadAlbum(options) {
   var promise = deferred();
 
-  exec('curl -o "' + host.watch_dir + options.title + '.torrent" ' +
+  exec('curl -o "' + host.watch_dir + options.Name + '.torrent" ' +
        '"https://apollo.rip/torrents.php?action=download&id=' + options.Id + '&authkey=' + host.authkey +  '&torrent_pass=' + host.torrent_pass + '"', 
     (error, stdout, stderr) => {
       if (error) {

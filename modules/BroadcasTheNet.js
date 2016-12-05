@@ -10,20 +10,20 @@ var config      = require('../config');
 
 // Exported function that is called as the download endpoint for the BroadcasTheNet module
 function downloadTVShow(options) {
-  var response = deferred();
+  var promise = deferred();
 
-  exec('wget --no-check-certificate -O "' + config[config.tvshows].watch_dir + options.title + '.torrent" "' + options.url + '"',
+  exec('curl -o "' + config[config.tvshows].watch_dir + options.Name + '.torrent" ' +
+       '"https://broadcasthe.net/torrents.php?action=download&id=' + options.Id + '&authkey=' + config[config.tvshows].authkey + '&torrent_pass=' + config[config.tvshows].torrent_pass + '"',
     function processDownload(error, stdout, stderr) {
       if (error) {
         console.log(stderr);
         return;
       }
 
-      console.log(stdout);
-      response.resolve();
+      promise.resolve(stdout);
     });
 
-    return response.promise;
+    return promise.promise;
 }
 
 
@@ -87,7 +87,7 @@ function process(json) {
       container   : torrent.Container,
       source      : torrent.Source,
       size        : Math.floor((torrent.Size / 1000000000) + .5) + ' GB',
-      url         : torrent.DownloadURL
+      Id          : torrentId 
     });
   }
 
