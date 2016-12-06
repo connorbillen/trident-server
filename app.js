@@ -9,9 +9,10 @@ var app = express();
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(cors());
 var routes = require('./routes/routes.js')(app);
+var config = require('./config.json');
 
 // Instantiate backend manager
-var manager = require('./manager');
+var client = require('./clients/' + config[config.client]);
 
 // Instantiate the CLI interface
 var cli = require('./cli');

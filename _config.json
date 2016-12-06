@@ -33,7 +33,7 @@
   },
   "rtorrent": {
     "music": {
-      "watch_dir": "",
+      "watch_dir" : "",
       "post_dir": "",
       "scgi_port": ""
     },
