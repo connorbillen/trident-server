@@ -35,17 +35,17 @@
     "music": {
       "watch_dir" : "",
       "post_dir": "",
-      "scgi_port": ""
+      "socket_path": ""
     },
     "movies": {
       "watch_dir": "",
       "post_dir": "",
-      "scgi_port": ""
+      "socket_path": ""
     },
     "tvshows": {
       "watch_dir": "",
       "post_dir": "",
-      "scgi_port": ""
+      "socket_path": ""
     }
   }
 }

@@ -12,7 +12,7 @@ var routes = require('./routes/routes.js')(app);
 var config = require('./config.json');
 
 // Instantiate backend manager
-var client = require('./clients/' + config[config.client]);
+var client = require('./clients/' + config.client);
 
 // Instantiate the CLI interface
 var cli = require('./cli');

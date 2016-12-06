@@ -5,12 +5,12 @@ var connections = [];
 var config = require('../config.json');
 
 for (var client in config[config.client]) {
-  connections.push(rtorrent({ host: 'localhost', port: config[config.clent][client].scgi_port }));
+  connections.push(rtorrent({ path: config[config.client][client].socket_path }));
 } 
 
 function checkClient () {
   connections.forEach( connection => {
-    connection.Details( console.log );
+    connection.Details( list => { console.log(list); });
   });
 }
 
