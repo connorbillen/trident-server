@@ -13,7 +13,7 @@ for (var client in config[config.client]) {
 
   ((rClient, client) => {
     setInterval( () => {
-      rClient.Details( list => { process(client ,list); }); 
+      rClient.Details( list => { process(client, list); }); 
     }, config[config.client][client].interval);
   })(rClient, client);
 } 
@@ -43,7 +43,7 @@ function process (type, list) {
 function postProcess (torrent, type) {
   if (torrent.directory === torrent.base_path) {
     console.log('Torrent is a directory');
-    exec('ln -s ' +  torrent.directory + '/* ' + config[config.client][type].post_dir + '/', (err, stdout, stderr) => {
+    exec('ln -s ' +  sanitize(torrent.directory) + '/* ' + sanitize(config[config.client][type].post_dir) + '/', (err, stdout, stderr) => {
       if (err) {
         console.log(stderr);
         return;
@@ -53,7 +53,7 @@ function postProcess (torrent, type) {
     });
   } else {
     console.log('Torrent is a file');
-    exec('ln -s "' +  torrent.base_path + '/*" "' + config[config.client][type].post_dir + '/"', (err, stdout, stderr) => {
+    exec('ln -s ' +  sanitize(torrent.base_path) + ' ' + sanitize(config[config.client][type].post_dir) + '/', (err, stdout, stderr) => {
       if (err) {
         console.log(stderr);
         return;
@@ -62,6 +62,14 @@ function postProcess (torrent, type) {
       console.log(stdout);
     });
   }
+}
+
+function sanitize (string) {
+  return string.replace(/ /g, '\\ ')
+               .replace(/\[/g, '\\[')
+               .replace(/\]/g, '\\]')
+               .replace(/\(/g, '\\(')
+               .replace(/\)/g, '\\)');
 }
 
 console.log('Starting post processor and scanner...');
