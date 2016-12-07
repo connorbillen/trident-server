@@ -12,7 +12,7 @@ var config      = require('../config');
 function downloadTVShow(options) {
   var promise = deferred();
 
-  exec('curl -o "' + config[config.tvshows].watch_dir + options.Name + '.torrent" ' +
+  exec('curl -o "' + config[config.tvshows].watch_dir + '/' + options.Name + '.torrent" ' +
        '"https://broadcasthe.net/torrents.php?action=download&id=' + options.Id + '&authkey=' + config[config.tvshows].authkey + '&torrent_pass=' + config[config.tvshows].torrent_pass + '"',
     function processDownload(error, stdout, stderr) {
       if (error) {
